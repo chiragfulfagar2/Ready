@@ -1,0 +1,442 @@
+4
+
+X=df.iloc[:,0:13]
+Y=df.iloc[:,:-1]
+
+from sklearn.model_selection import train_test_split
+X_train,X_test,Y_train,Y_test=train_test_split(X,Y,test_size=0.20,random_state=42)
+
+from sklearn.preprocessing import StandardScaler
+sc=StandardScaler()
+X_train=sc.fit_transform(X_train)
+X_test=sc.fit_transform(X_test)
+
+from sklearn.linear_model import LinearRegression
+lr=LinearRegression()
+lr.fit(X_train,Y_train)
+y_pred=lr.predict(X_test)
+
+print(y_pred)
+
+from sklearn.pipeline import make_pipeline
+model = make_pipeline(StandardScaler(with_mean=False),LinearRegression())
+model.fit(X_train,Y_train)
+
+print("Testing Accuracy")
+lr.score(X_test,Y_test)
+
+print("Training Accuracy")
+lr.score(X_train,Y_train)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+5
+
+x=df.iloc[:,2:4]
+y=df.iloc[:,4]
+
+from sklearn.model_selection import train_test_split
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.20,random_state=42)
+
+from sklearn.preprocessing import StandardScaler
+sc=StandardScaler()
+x_train=sc.fit_transform(x_train)
+x_test=sc.fit_transform(x_test)
+
+from sklearn.linear_model import LogisticRegression
+model=LogisticRegression()
+
+model.fit(x_train,y_train)
+
+y_pred=model.predict(x_test)
+from sklearn.metrics import confusion_matrix
+
+cm=confusion_matrix(y_test,y_pred)
+print(cm)
+
+tn=cm[0][0]
+fp=cm[0][1]
+fn=cm[1][0]
+tp=cm[1][1]
+
+print(tn,fp,fn,tp)
+
+accuracy=(tp+tn)/(tn+fp+fn+tp)
+print(accuracy)
+
+error_rate=(fp+fn)/(tn+fp+fn+tp)
+print(error_rate)
+
+precision=tp/(tp+fp)
+print(precision)
+
+recall=tp/(tp+fn)
+print(recall)
+
+
+6
+
+import sklearn
+
+iris['class'].unique()
+
+from sklearn.preprocessing import LabelEncoder
+encode=LabelEncoder()
+iris['class']=encode.fit_transform(iris['class'])
+iris.head()
+
+iris.replace('Iris-setosa',1,inplace=True)
+iris.replace('Iris-versicolor',2,inplace=True)
+iris.replace('Iris-virginica',3,inplace=True)
+
+X =iris.iloc[:,:4].values
+y = iris['class'].values
+
+from sklearn.model_selection import train_test_split
+x_train,x_test,y_train,y_test=train_test_split(X,y,test_size=0.2,random_state=0)
+
+from sklearn.preprocessing import StandardScaler
+sc=StandardScaler()
+x_train=sc.fit_transform(x_train)
+x_test=sc.fit_transform(x_test)
+
+from sklearn.naive_bayes import GaussianNB
+classifier = GaussianNB()
+classifier.fit(x_train, y_train)
+
+y_pred=classifier.predict(x_test)
+print(y_pred)
+
+from sklearn.metrics import confusion_matrix
+cm = confusion_matrix(y_test,y_pred)
+print(cm)
+
+from sklearn.metrics import accuracy_score
+print("Accuracy :",accuracy_score(y_test,y_pred))
+
+tp, fn, fp, tn = confusion_matrix(y_test,y_pred,labels=[1,0]).reshape(-1)
+
+
+
+print('\nAccuracy: {:.2f}'.format(accuracy_score(y_test,y_pred)))
+print('Error Rate: ',(fp+fn)/(tp+tn+fn+fp))
+print('Sensitivity (Recall or True positive rate) :',tp/(tp+fn))
+print('Specificity (True negative rate) :',tn/(fp+tn))
+print('Precision (Positive predictive value) :',tp/(tp+fp))
+print('False Positive Rate :',fp/(tn+fp))
+
+
+8
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+%matplotlib inline
+import seaborn as sns
+import warnings
+warnings.filterwarnings('ignore')
+
+sns.histplot(x='Fare',data=titanic)
+
+sns.displot(x='Age',data=titanic)
+
+sns.catplot(x='Survived',data=titanic, kind='count',hue='Sex' )
+
+titanic['Sex'].value_counts().plot(kind='pie')
+
+titanic['Sex'].value_counts().plot(kind='pie', autopct='%.2f')
+
+titanic['Sex'].value_counts()
+
+9
+
+sns.boxplot(x='Sex', y='Age',data=titanic,hue='Survived')
+
+
+
+
+
+
+
+
+
+
+
+10
+
+fig,axes=plt.subplots(2,2, figsize=(16,8))
+
+axes[0,0].set_title("Distribution of Sepal Length")
+axes[0,0].hist(iris["sepal length"]);
+
+axes[0,1].set_title("Distribution of Sepal Width")
+axes[0,1].hist(iris["sepal width"]);
+
+axes[1,0].set_title("Distribution of Petal Length")
+axes[1,0].hist(iris["petal length"]);
+
+axes[1,1].set_title("Distribution of Petal Width")
+axes[1,1].hist(iris["petal width"]);
+
+
+fig, axes = plt.subplots(2, 2, figsize=(16,9))
+
+axes[0,0].set_title("Distribution of Sepal Length")
+sns.boxplot(  y="sepal_length", x= "species", data=dataset,  orient='v' , ax=axes[0, 0])
+
+axes[0,1].set_title("Distribution of Sepal Length")
+sns.boxplot(  y="sepal_width", x= "species", data=dataset,  orient='v' , ax=axes[0, 1])
+
+axes[1,0].set_title("Distribution of Sepal Length")
+sns.boxplot(  y="petal_length", x= "species", data=dataset,  orient='v' , ax=axes[1, 0])
+
+axes[1,1].set_title("Distribution of Sepal Length")
+sns.boxplot(  y="petal_width", x= "species", data=dataset,  orient='v' , ax=axes[1, 1])
+plt.show()
+
+2
+
+mean_average=data['math score'].mean()
+data['math score'].fillna(value=mean_average,inplace=True)
+
+
+from sklearn.preprocessing import LabelEncoder
+le = LabelEncoder()
+df['gender'] = le.fit_transform(df['gender'])
+
+
+import matplotlib.pyplot as plt
+df.boxplot(['math score', 'reading score', 'writing score'])
+
+
+3
+
+iris_groupby = iris.groupby(by='species')
+
+iris_groupby.std()
+
+iris_groupby.mean()
+
+
+iris_groupby.median()
+
+iris_groupby.min()
+
+iris_groupby.max()
+
+
+7
+
+
+import nltk
+nltk.download("punkt")
+nltk.download("stopwords")
+nltk.download("wordnet")
+nltk.download("averaged_perceptron_tagger")
+
+
+from nltk import word_tokenize, sent_tokenize
+
+
+corpus = "Sachin was the GOAT of the previous generation. Virat is the GOAT of this generation. Shubman will be the GOAT of the next generation"
+
+
+from nltk import pos_tag
+
+tokens = word_tokenize(corpus)
+print(pos_tag(tokens))
+
+
+
+
+
+
+
+
+
+
+
+from nltk.corpus import stopwords
+stop_words = set(stopwords.words("english"))
+
+
+tokens = word_tokenize(corpus)
+cleaned_tokens = []
+for token in tokens:
+  if (token not in stop_words):
+    cleaned_tokens.append(token)
+print(cleaned_tokens)
+
+
+from nltk.stem import PorterStemmer
+stemmer = PorterStemmer()
+
+stemmed_tokens = []
+for token in cleaned_tokens:
+  stemmed = stemmer.stem(token)
+  stemmed_tokens.append(stemmed)
+print(stemmed_tokens)
+
+
+
+from nltk.stem import WordNetLemmatizer
+lemmatizer = WordNetLemmatizer()
+
+lemmatized_tokens = []
+for token in cleaned_tokens:
+  lemmatized = lemmatizer.lemmatize(token)
+  lemmatized_tokens.append(lemmatized)
+print(lemmatized_tokens)
+
+
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+corpus = [
+    "Sachin was the GOAT of the previous generation",
+    "Virat is the GOAT of the this generation",
+    "Shubman will be the GOAT of the next generation"
+]
+
+
+vectorizer = TfidfVectorizer()
+
+
+matrix = vectorizer.fit(corpus)
+matrix.vocabulary_
+     
+
+tfidf_matrix = vectorizer.transform(corpus)
+print(tfidf_matrix)
+
+
+print(vectorizer.get_feature_names_out())
+
+
+SCALA
+
+
+1.     Write a Scala program to check the largest number among three given integers.
+        	
+        	// taking three variables
+        	var a: Int = 70
+        	var b: Int = 40
+        	var c: Int = 100
+ 
+        	// condition_1
+        	if (a > b)
+        	{
+                    	// condition_2
+                    	if(a > c)
+                    	{
+                                	println("a is largest");
+                    	}
+                    	
+                    	else
+                    	{
+                                	println("c is largest")
+                    	}
+        	
+        	}
+        	
+        	else
+        	{
+                    	
+                    	// condition_3
+                    	if(b > c)
+                    	{
+                                	println("b is largest")
+                    	}
+                    	
+                    	else
+                    	{
+                                	println("c is largest")
+                    	}
+        	}
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+2) Write a Scala program to reverse an array of integer values.
+ 
+var nums1 = Array(1789, 2035, 1899, 1456, 2013)
+println("Original array:")
+for (x <- nums1) {
+  print(s"${x}, ")
+}
+var result1 = test(nums1)
+println("\nReversed array:")
+for (x <- result1) {
+  print(s"${x}, ")
+}
+ 
+def test(nums: Array[Int]): Array[Int] = {
+  var temp1 = 0
+  var temp2 = 0
+  var index_position = 0
+  var index_last_pos = nums.length - 1
+  while (index_position < index_last_pos) {
+	temp1 = nums(index_position)
+	temp2 = nums(index_last_pos)
+	nums(index_position) = temp2
+	nums(index_last_pos) = temp1
+	index_position += 1
+	index_last_pos -= 1
+  }
+  nums
+}
+ 
+ 
+ 
+ 
+3) Write a Scala code to merge two integer arrays into a third array
+ 
+ 
+ var IntArray1 = Array(10,11,12,13,14,15)
+    	var IntArray2 = Array(20,21,22,23,24,25)
+    	var IntArray3 = new Array[Int](12)
+    	var count:Int=0
+    	var count1:Int=0
+    	
+    	// Merge IntArray1 and IntArray2 into IntArray3.
+    	while(count<12)
+    	{
+        	if(count<6)
+        	IntArray3(count)=IntArray1(count)
+        	else
+        	{
+                IntArray3(count)=IntArray2(count1)
+            	count1=count1+1
+        	}
+        	count=count+1
+    	}
+    	
+    	println("Elements of merged array:")
+    	count=0
+    	while(count<12)
+    	{
+        	printf("%d ",IntArray3(count))
+        	count=count+1
+    	}
+        
+
+
+
